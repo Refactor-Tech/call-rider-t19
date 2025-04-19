@@ -1,57 +1,59 @@
-# 📚 Índice de Aulas
+# Aulas
 
-## Aula 1 – Fundamentos de Código Limpo ✨
+### 🧱 [Aula 1 – Fundamentos de Código Limpo e Qualidade](aula_01.md)
 
-- [ ] **Clean Code** – Escrevendo código que "fala".
-- [ ] **Refatoração e Code Smells** – Tornando o código melhor sem alterar comportamento.
-- [ ] **TDD e Técnicas de Refatoração** – Testar primeiro, refatorar sempre.
+- Clean Code
+- Refatoração e Code Smells
+- Test-Driven Development (TDD)
 
-## Aula 2 – Construindo Software Testável 🧪
+### 🧪 Aula 2 – Testes e Arquitetura Hexagonal com SOLID
 
-- [ ] **Tipos de Testes Automatizados** – Unitário, de Integração, Aceitação, E2E.
-- [ ] **Arquitetura Hexagonal (com SRP e DIP)** – Separando responsabilidades e invertendo dependências.
-- [ ] **Test Patterns (Stub, Spy, Mock, Fake)** – Estratégias para testar comportamentos.
+- Tipos de Testes (Unitário, Integração, etc.)
+- Arquitetura Hexagonal
+  - SRP – Single Responsibility Principle
+  - DIP – Dependency Inversion Principle
 
-## Aula 3 – Entendendo a Clean Architecture 🏩️
+### 🏗 Aula 3 – Clean Architecture: Organização em Camadas
 
-- [ ] **Use Cases** – Regras de negócio organizadas.
-- [ ] **Entities** – Núcleo da lógica de negócio.
-- [ ] **Interface Adapters** – Adaptadores de entrada e saída.
-- [ ] **Frameworks e Drivers** – Ferramentas externas integradas à aplicação.
+- Use Cases
+- Entities
+- Interface Adapters
+- Frameworks and Drivers
 
-## Aula 4 – Dominando a Modelagem Tática 🛠️
+### 🧠 Aula 4 – DDD (Parte 1): Modelagem Tática
 
-- [ ] **DDD: Value Objects** – Representação imutável de conceitos.
-- [ ] **DDD: Entities** – Objetos com identidade própria.
-- [ ] **DDD: Domain Services** – Lógica de negócio fora das entidades.
-- [ ] **DDD: Aggregates** – Consistência através de raízes agregadas.
-- [ ] **DDD: Repositories** – Abstraindo o acesso a dados.
+- Value Objects
+- Entities
+- Domain Services
+- Aggregates
+- Repositories
 
-## Aula 5 – Estratégias Avançadas de Domínio 🎯
+### 🗺 Aula 5 – DDD (Parte 2): Modelagem Estratégica e SOLID
 
-- [ ] **DDD: Domain** – Modelagem centralizada no negócio.
-- [ ] **DDD: Subdomain** – Dividindo para conquistar.
-- [ ] **DDD: Bounded Context** – Contextos bem definidos.
-- [ ] **DDD: Microservices** – Arquitetura distribuída.
-- [ ] **SOLID: Liskov Substitution Principle (LSP)** – Substituibilidade de tipos.
-- [ ] **SOLID: Open-Closed Principle (OCP)** – Aberto para extensão, fechado para modificação.
+- Modelagem Estratégica
+  - Domain
+  - Subdomain
+  - Bounded Context
+  - Microservices
+- SOLID (continuação)
+  - Liskov Substitution Principle (LSP)
+  - Open/Closed Principle (OCP)
 
-## Aula 6 – Comunicação entre Componentes 🔌
+### 🔌 Aula 6 – Integrações e Arquitetura Orientada a Eventos
 
-- [ ] **Dependency Injection** – Reduzindo acoplamento de forma elegante.
-- [ ] **ORM + Repository Pattern** – Persistência orientada ao domínio.
-- [ ] **Domain Events** – Propagando mudanças no sistema.
-- [ ] **Mediator** – Centralizando a comunicação.
-- [ ] **Observer** – Reagindo a mudanças.
-- [ ] **Event-Driven Architecture (EDA)** – Sistemas orientados a eventos.
+- Dependency Injection
+- ORM + Repository Pattern
+- Domain Events
+  - Padrões Mediator e Observer
+- Event-Driven Architecture (EDA)
 
-## Aula 7 – Separando Comandos e Consultas ⚡
+### 🔄 Aula 7 – CQRS: Separação de Responsabilidades
 
-- [ ] **CQRS: Introdução** – Comandos e consultas separados.
-- [ ] **CQRS: Implementação Prática** – Aplicando na arquitetura.
+- CQRS – Parte 1
+- CQRS – Parte 2
 
-## Aula 8 – Frontend Limpo e Testável 🎨
+### 🎨 Aula 8 – Front-end Moderno com Arquitetura Limpa
 
-- [ ] **Frontend com TDD** – Garantindo qualidade de ponta a ponta.
-- [ ] **Frontend com Clean Architecture** – Arquitetura limpa no front.
-- [ ] **Frontend com Design Patterns** – Padrões de projeto aplicados ao front-end.
+- Front-end com TDD
+- Clean Architecture aplicada ao Front-end
+- Design Patterns no Front-end
