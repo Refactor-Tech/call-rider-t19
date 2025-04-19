@@ -2,9 +2,11 @@ import crypto from "crypto";
 import pgp from "pg-promise";
 import express from "express";
 import { validateCpf } from "@/validate-cpf";
+import cors from "cors";
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 app.post("/signup", async function (req, res) {
   const input = req.body;
