@@ -77,6 +77,75 @@ pnpm test -r
 
 _Dica: use o filtro `--filter [nome]` para rodar um app específico._
 
+## Como Adicionar Dependências no Monorepo
+
+### 1. Adicionar uma dependência de **runtime** a um app específico
+
+**Exemplo:** adicionar `express` ao backend:
+
+```bash
+pnpm add express --filter backend
+```
+
+**Explicação:**
+
+- `--filter backend` → instala somente no workspace `backend`.
+- `express` é uma dependência que será usada em tempo de execução.
+
+---
+
+### 2. Adicionar uma dependência de **desenvolvimento** a um app específico
+
+**Exemplo:** adicionar `@types/express` ao backend:
+
+```bash
+pnpm add -D @types/express --filter backend
+```
+
+**Explicação:**
+
+- `-D` é o atalho para `--save-dev` (dependência de desenvolvimento).
+- `--filter backend` instala no `backend` apenas.
+
+---
+
+## 3. Adicionar uma dependência **global** para todos os apps
+
+**Exemplo:** adicionar `typescript`, `vitest` e `tsx` no root:
+
+```bash
+pnpm add -D -w typescript vitest tsx
+```
+
+**Explicação:**
+
+- `-w` ou `--workspace-root` instala no `package.json` da raiz.
+- Usado para ferramentas compartilhadas em todo o monorepo.
+
+---
+
+## Regras de Boas Práticas para Dependências
+
+| Tipo                                              | Onde adicionar                            |
+| :------------------------------------------------ | :---------------------------------------- |
+| Dependência específica de backend/frontend        | `--filter backend` ou `--filter frontend` |
+| Dependência global de toolchain (build/test/lint) | `-w` (root)                               |
+| Dependência só de dev (tipagens, tests)           | Adicionar com `-D`                        |
+
+**Não polua apps com dependências desnecessárias!**
+
+---
+
+## Status Atual do Projeto
+
+- Monorepo configurado com pnpm workspaces.
+- Backend rodando com Express + PostgreSQL.
+- Testes automáticos com Vitest.
+- Cobertura de código suportada.
+- Docker-compose para infraestrutura.
+
+---
+
 ---
 
 ## 🧱 Boas Práticas
