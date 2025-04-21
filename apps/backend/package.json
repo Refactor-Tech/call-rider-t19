@@ -2,7 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "scripts": {
-    "dev": "tsx watch src/signup.ts",
+    "dev": "tsx watch src/api.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "test": "vitest",
