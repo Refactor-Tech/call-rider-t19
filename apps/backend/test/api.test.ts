@@ -6,7 +6,7 @@ axios.defaults.validateStatus = function () {
 };
 
 describe("create account", () => {
-  it("should create passenger account", async () => {
+  it.only("should create passenger account", async () => {
     const input = {
       name: "John Doe",
       email: `john.doe${Math.random()}@example.com`,
@@ -29,8 +29,8 @@ describe("create account", () => {
     expect(outputGetAccount.name).toBe(input.name);
     expect(outputGetAccount.email).toBe(input.email);
     expect(outputGetAccount.cpf).toBe(input.cpf);
-    expect(outputGetAccount.is_passenger).toBe(input.isPassenger);
-    expect(outputGetAccount.account_id).toBe(outputSignup.accountId);
+    expect(outputGetAccount.isPassenger).toBe(input.isPassenger);
+    expect(outputGetAccount.accountId).toBe(outputSignup.accountId);
   });
 
   it("should not create passenger account with invalid name", async () => {

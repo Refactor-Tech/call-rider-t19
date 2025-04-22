@@ -1,5 +1,17 @@
-import { describe, it, expect } from "vitest";
-import { getAccount, signup } from "@/service";
+import { describe, it, expect, beforeEach } from "vitest";
+import { Signup } from "@/signup.service";
+import { GetAccount } from "@/get-account.service";
+import { AccountDAODatabase, AccountDAOMemory } from "@/data";
+
+let signup: Signup;
+let getAccount: GetAccount;
+
+beforeEach(() => {
+  // const accountDAO = new AccountDAODatabase();
+  const accountDAO = new AccountDAOMemory();
+  signup = new Signup(accountDAO);
+  getAccount = new GetAccount(accountDAO);
+});
 
 describe("create account", () => {
   it("should create passenger account", async () => {
@@ -11,14 +23,16 @@ describe("create account", () => {
       isPassenger: true,
     };
 
-    const outputSignup = await signup(input);
-    const outputGetAccount = await getAccount(outputSignup.accountId);
+    const outputSignup = await signup.signup(input);
+    const outputGetAccount = await getAccount.getAccount(
+      outputSignup.accountId
+    );
     expect(outputSignup).toHaveProperty("accountId");
     expect(outputGetAccount.name).toBe(input.name);
     expect(outputGetAccount.email).toBe(input.email);
     expect(outputGetAccount.cpf).toBe(input.cpf);
-    expect(outputGetAccount.is_passenger).toBe(input.isPassenger);
-    expect(outputGetAccount.account_id).toBe(outputSignup.accountId);
+    expect(outputGetAccount.isPassenger).toBe(input.isPassenger);
+    expect(outputGetAccount.accountId).toBe(outputSignup.accountId);
   });
 
   it("should not create duplicated passenger account", async () => {
@@ -30,8 +44,8 @@ describe("create account", () => {
       isPassenger: true,
     };
 
-    await signup(input);
-    await expect(signup(input)).rejects.toThrow(
+    await signup.signup(input);
+    await expect(signup.signup(input)).rejects.toThrow(
       new Error("Duplicated account")
     );
   });
@@ -44,7 +58,9 @@ describe("create account", () => {
       password: "password123",
       isPassenger: true,
     };
-    await expect(signup(input)).rejects.toThrow(new Error("Invalid name"));
+    await expect(signup.signup(input)).rejects.toThrow(
+      new Error("Invalid name")
+    );
   });
 
   it("should not create passenger account with invalid email", async () => {
@@ -55,7 +71,9 @@ describe("create account", () => {
       password: "password123",
       isPassenger: true,
     };
-    await expect(signup(input)).rejects.toThrow(new Error("Invalid email"));
+    await expect(signup.signup(input)).rejects.toThrow(
+      new Error("Invalid email")
+    );
   });
 
   it("should not create passenger account with invalid CPF", async () => {
@@ -66,7 +84,9 @@ describe("create account", () => {
       password: "password123",
       isPassenger: true,
     };
-    await expect(signup(input)).rejects.toThrow(new Error("Invalid CPF"));
+    await expect(signup.signup(input)).rejects.toThrow(
+      new Error("Invalid CPF")
+    );
   });
 
   it("should create driver account", async () => {
@@ -79,16 +99,18 @@ describe("create account", () => {
       carPlate: "ABC1234",
     };
 
-    const outputSignup = await signup(input);
-    const outputGetAccount = await getAccount(outputSignup.accountId);
+    const outputSignup = await signup.signup(input);
+    const outputGetAccount = await getAccount.getAccount(
+      outputSignup.accountId
+    );
 
     expect(outputSignup).toHaveProperty("accountId");
     expect(outputGetAccount.name).toBe(input.name);
     expect(outputGetAccount.email).toBe(input.email);
     expect(outputGetAccount.cpf).toBe(input.cpf);
-    expect(outputGetAccount.is_driver).toBe(input.isDriver);
-    expect(outputGetAccount.account_id).toBe(outputSignup.accountId);
-    expect(outputGetAccount.car_plate).toBe(input.carPlate);
+    expect(outputGetAccount.isDriver).toBe(input.isDriver);
+    expect(outputGetAccount.accountId).toBe(outputSignup.accountId);
+    expect(outputGetAccount.carPlate).toBe(input.carPlate);
   });
 
   it("should not create driver account with wrong car plate", async () => {
@@ -100,6 +122,8 @@ describe("create account", () => {
       isDriver: true,
       carPlate: "",
     };
-    await expect(signup(input)).rejects.toThrow(new Error("Invalid car plate"));
+    await expect(signup.signup(input)).rejects.toThrow(
+      new Error("Invalid car plate")
+    );
   });
 });
