@@ -2,7 +2,6 @@ import pgp from 'pg-promise';
 import { GetAccountData } from './get-account.service';
 
 export interface AccountDAO extends GetAccountData {}
-
 export class AccountDAODatabase implements AccountDAO {
   async getAccountByEmail(email: string) {
     const connection = pgp()('postgres://admin:123456@localhost:5432/app');

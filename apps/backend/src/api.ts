@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { Signup } from './signup.service';
 import { GetAccount } from './get-account.service';
-import { AccountDAODatabase } from './data';
+import { AccountDAODatabase } from './accountDAO';
 import { MailerGatewayMemory } from './mailer-gateway';
 
 const app = express();
@@ -17,7 +17,7 @@ const getAccount = new GetAccount(accountDAO);
 app.post('/signup', async function (req, res) {
   const input = req.body;
   try {
-    const output = await signup.signup(input);
+    const output = await signup.execute(input);
     res.json(output);
   } catch (e: any) {
     res.status(422).json({ message: e.message });
@@ -25,7 +25,7 @@ app.post('/signup', async function (req, res) {
 });
 
 app.get('/accounts/:id', async function (req, res) {
-  const output = await getAccount.getAccount(req.params.id);
+  const output = await getAccount.execute(req.params.id);
   res.json(output);
 });
 

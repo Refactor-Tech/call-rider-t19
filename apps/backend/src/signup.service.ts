@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { validateCpf } from '@/validate-cpf';
 import MailerGateway from './mailer-gateway';
-import { AccountDAO } from './data';
+import { AccountDAO } from './accountDAO';
 
 export class Signup {
   constructor(
@@ -9,7 +9,7 @@ export class Signup {
     readonly mailerGateway: MailerGateway
   ) {}
 
-  async signup(input: any) {
+  async execute(input: any) {
     const account = {
       accountId: crypto.randomUUID(),
       name: input.name,

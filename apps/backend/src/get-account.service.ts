@@ -7,7 +7,7 @@ export interface GetAccountData {
 export class GetAccount {
   constructor(readonly getAccountData: GetAccountData) {}
 
-  async getAccount(id: string) {
+  async execute(id: string) {
     const account = await this.getAccountData.getAccountById(id);
     return account;
   }
