@@ -90,4 +90,29 @@ describe('request ride', () => {
       new Error('Only passengers can request rides')
     );
   });
+  it('should not request a ride if passenger has already active ride', async () => {
+    const inputSignup = {
+      name: 'John Doe',
+      email: `john.doe${Math.random()}@example.com`,
+      cpf: '87748248800',
+      password: 'password123',
+      isPassenger: true,
+    };
+    const outputSignup = await signup.execute(inputSignup);
+    const inputRequestRide = {
+      passengerId: outputSignup.accountId,
+      from: {
+        latitude: -27.584905257808835,
+        longitude: -48.545022195325124,
+      },
+      to: {
+        latitude: -27.496887588317275,
+        longitude: -48.522234807851476,
+      },
+    };
+    await requestRide.execute(inputRequestRide);
+    await expect(requestRide.execute(inputRequestRide)).rejects.toThrow(
+      new Error('Passenger already has an active ride')
+    );
+  });
 });

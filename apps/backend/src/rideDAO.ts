@@ -3,6 +3,7 @@ import pgp from 'pg-promise';
 export interface RideDAO {
   saveRide(ride: any): Promise<void>;
   getRideById(rideId: string): Promise<any>;
+  hasActiveRideByPassengerId(passengerId: string): Promise<boolean>;
 }
 
 export class RideDAODatabase implements RideDAO {
@@ -29,6 +30,16 @@ export class RideDAODatabase implements RideDAO {
       status: rideData.status,
       date: rideData.date,
     };
+  }
+
+  async hasActiveRideByPassengerId(passengerId: string): Promise<boolean> {
+    const connection = pgp()('postgres://admin:123456@localhost:5432/app');
+    const [rideData] = await connection.query(
+      "select 1 from ccca.ride where passenger_id = $1 and status not in ('completed', 'cancelled')",
+      [passengerId]
+    );
+    await connection.$pool.end();
+    return !!rideData;
   }
 
   async saveRide(ride: any) {

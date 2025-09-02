@@ -8,6 +8,14 @@ export default class RequestRide {
   ) {}
 
   async execute(input: Input) {
+    const accountData = await this.accountDAO.getAccountById(input.passengerId);
+    if (!accountData.isPassenger) {
+      throw new Error('Only passengers can request rides');
+    }
+    const hasActiveRide = await this.rideDAO.hasActiveRideByPassengerId(input.passengerId);
+    if (hasActiveRide) {
+      throw new Error('Passenger already has an active ride');
+    }
     const ride = {
       rideId: crypto.randomUUID(),
       passengerId: input.passengerId,
@@ -24,10 +32,6 @@ export default class RequestRide {
       distance: 0,
       date: new Date(),
     };
-    const accountData = await this.accountDAO.getAccountById(input.passengerId);
-    if (!accountData.isPassenger) {
-      throw new Error('Only passengers can request rides');
-    }
     await this.rideDAO.saveRide(ride);
     return {
       rideId: ride.rideId,
