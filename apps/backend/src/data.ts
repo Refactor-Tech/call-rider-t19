@@ -1,15 +1,14 @@
 import pgp from 'pg-promise';
 import { GetAccountData } from './get-account.service';
-import { SignupData } from './signup.service';
 
-export interface AccountDAO extends GetAccountData, SignupData {}
+export interface AccountDAO extends GetAccountData {}
+
 export class AccountDAODatabase implements AccountDAO {
   async getAccountByEmail(email: string) {
     const connection = pgp()('postgres://admin:123456@localhost:5432/app');
-    const [account] = await connection.query(
-      'select * from ccca.account where email = $1',
-      [email]
-    );
+    const [account] = await connection.query('select * from ccca.account where email = $1', [
+      email,
+    ]);
     await connection.$pool.end();
     if (!account) return false;
     return {
@@ -25,10 +24,9 @@ export class AccountDAODatabase implements AccountDAO {
 
   async getAccountById(id: string) {
     const connection = pgp()('postgres://admin:123456@localhost:5432/app');
-    const [account] = await connection.query(
-      'select * from ccca.account where account_id = $1',
-      [id]
-    );
+    const [account] = await connection.query('select * from ccca.account where account_id = $1', [
+      id,
+    ]);
     await connection.$pool.end();
     return {
       accountId: account.account_id,

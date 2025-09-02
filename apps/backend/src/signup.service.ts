@@ -1,15 +1,11 @@
 import crypto from 'crypto';
 import { validateCpf } from '@/validate-cpf';
 import MailerGateway from './mailer-gateway';
-
-export interface SignupData {
-  saveAccount(account: any): Promise<void>;
-  getAccountByEmail(email: string): Promise<any>;
-}
+import { AccountDAO } from './data';
 
 export class Signup {
   constructor(
-    readonly signupData: SignupData,
+    readonly accountDAO: AccountDAO,
     readonly mailerGateway: MailerGateway
   ) {}
 
@@ -24,9 +20,7 @@ export class Signup {
       isDriver: input.isDriver,
       carPlate: input.carPlate,
     };
-    const existingAccount = await this.signupData.getAccountByEmail(
-      input.email
-    );
+    const existingAccount = await this.accountDAO.getAccountByEmail(input.email);
     if (existingAccount) throw new Error('Duplicated account');
     const isNameValid = input.name.match(/[a-zA-Z] [a-zA-Z]+/);
     const isEmailValid = input.email.match(/^(.+)@(.+)$/);
@@ -36,7 +30,7 @@ export class Signup {
     if (!isValidCPF) throw new Error('Invalid CPF');
     if (input.isDriver && !input.carPlate.match(/[A-Z]{3}[0-9]{4}/))
       throw new Error('Invalid car plate');
-    await this.signupData.saveAccount(account);
+    await this.accountDAO.saveAccount(account);
     await this.mailerGateway?.send(account.email, 'Welcome', '');
     return {
       accountId: account.accountId,
