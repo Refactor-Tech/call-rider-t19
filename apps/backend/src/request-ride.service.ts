@@ -24,6 +24,10 @@ export default class RequestRide {
       distance: 0,
       date: new Date(),
     };
+    const accountData = await this.accountDAO.getAccountById(input.passengerId);
+    if (!accountData.isPassenger) {
+      throw new Error('Only passengers can request rides');
+    }
     await this.rideDAO.saveRide(ride);
     return {
       rideId: ride.rideId,

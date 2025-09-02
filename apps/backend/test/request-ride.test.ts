@@ -29,7 +29,7 @@ afterEach(() => {
 });
 
 describe('request ride', () => {
-  it.only('should request ride', async () => {
+  it('should request ride', async () => {
     const inputSignup = {
       accountId: '',
       name: 'John Doe',
@@ -64,5 +64,30 @@ describe('request ride', () => {
     expect(outputGetRide.status).toBe('requested');
     expect(outputGetRide.fare).toBe(0);
     expect(outputGetRide.distance).toBe(0);
+  });
+  it('should not request a ride if it is not a passenger', async () => {
+    const inputSignup = {
+      name: 'John Doe',
+      email: `john.doe${Math.random()}@example.com`,
+      cpf: '87748248800',
+      password: 'password123',
+      carPlate: 'AAA9999',
+      isDriver: true,
+    };
+    const outputSignup = await signup.execute(inputSignup);
+    const inputRequestRide = {
+      passengerId: outputSignup.accountId,
+      from: {
+        latitude: -27.584905257808835,
+        longitude: -48.545022195325124,
+      },
+      to: {
+        latitude: -27.496887588317275,
+        longitude: -48.522234807851476,
+      },
+    };
+    await expect(requestRide.execute(inputRequestRide)).rejects.toThrow(
+      new Error('Only passengers can request rides')
+    );
   });
 });
