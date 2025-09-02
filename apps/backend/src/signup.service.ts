@@ -1,5 +1,6 @@
-import crypto from "crypto";
-import { validateCpf } from "@/validate-cpf";
+import crypto from 'crypto';
+import { validateCpf } from '@/validate-cpf';
+import MailerGateway from './mailer-gateway';
 
 export interface SignupData {
   saveAccount(account: any): Promise<void>;
@@ -7,7 +8,10 @@ export interface SignupData {
 }
 
 export class Signup {
-  constructor(readonly signupData: SignupData) {}
+  constructor(
+    readonly signupData: SignupData,
+    readonly mailerGateway: MailerGateway
+  ) {}
 
   async signup(input: any) {
     const account = {
@@ -23,16 +27,17 @@ export class Signup {
     const existingAccount = await this.signupData.getAccountByEmail(
       input.email
     );
-    if (existingAccount) throw new Error("Duplicated account");
+    if (existingAccount) throw new Error('Duplicated account');
     const isNameValid = input.name.match(/[a-zA-Z] [a-zA-Z]+/);
     const isEmailValid = input.email.match(/^(.+)@(.+)$/);
     const isValidCPF = validateCpf(input.cpf);
-    if (!isNameValid) throw new Error("Invalid name");
-    if (!isEmailValid) throw new Error("Invalid email");
-    if (!isValidCPF) throw new Error("Invalid CPF");
+    if (!isNameValid) throw new Error('Invalid name');
+    if (!isEmailValid) throw new Error('Invalid email');
+    if (!isValidCPF) throw new Error('Invalid CPF');
     if (input.isDriver && !input.carPlate.match(/[A-Z]{3}[0-9]{4}/))
-      throw new Error("Invalid car plate");
+      throw new Error('Invalid car plate');
     await this.signupData.saveAccount(account);
+    await this.mailerGateway?.send(account.email, 'Welcome', '');
     return {
       accountId: account.accountId,
     };

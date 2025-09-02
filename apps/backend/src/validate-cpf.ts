@@ -9,7 +9,7 @@ export function validateCpf(cpf: string) {
 }
 
 function sanitizeCpf(cpf: string) {
-  return cpf.replace(/[^0-9]/g, "");
+  return cpf.replace(/[^0-9]/g, '');
 }
 
 function isAllDigitsEqual(cpf: string) {
