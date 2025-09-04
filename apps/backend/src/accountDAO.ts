@@ -1,7 +1,12 @@
 import pgp from 'pg-promise';
 import { GetAccountData } from './get-account.service';
+import Account from './Account';
 
-export interface AccountDAO extends GetAccountData {}
+export interface AccountDAO {
+  saveAccount(account: Account): Promise<void>;
+  getAccountByEmail(email: string): Promise<Account | undefined>;
+  getAccountById(id: string): Promise<Account | undefined>;
+}
 export class AccountDAODatabase implements AccountDAO {
   async getAccountByEmail(email: string) {
     const connection = pgp()('postgres://admin:123456@localhost:5432/app');
@@ -9,16 +14,17 @@ export class AccountDAODatabase implements AccountDAO {
       email,
     ]);
     await connection.$pool.end();
-    if (!account) return false;
-    return {
-      accountId: account?.account_id,
-      name: account.name,
-      email: account.email,
-      cpf: account.cpf,
-      carPlate: account.car_plate,
-      isPassenger: account.is_passenger,
-      isDriver: account.is_driver,
-    };
+    if (!account) return;
+    return new Account(
+      account.account_id,
+      account.name,
+      account.email,
+      account.cpf,
+      account.car_plate,
+      account.password,
+      account.is_passenger,
+      account.is_driver
+    );
   }
 
   async getAccountById(id: string) {
@@ -27,18 +33,19 @@ export class AccountDAODatabase implements AccountDAO {
       id,
     ]);
     await connection.$pool.end();
-    return {
-      accountId: account.account_id,
-      name: account.name,
-      email: account.email,
-      cpf: account.cpf,
-      carPlate: account.car_plate,
-      isPassenger: account.is_passenger,
-      isDriver: account.is_driver,
-    };
+    return new Account(
+      account.account_id,
+      account.name,
+      account.email,
+      account.cpf,
+      account.car_plate,
+      account.password,
+      account.is_passenger,
+      account.is_driver
+    );
   }
 
-  async saveAccount(account: any) {
+  async saveAccount(account: Account) {
     const connection = pgp()('postgres://admin:123456@localhost:5432/app');
     await connection.query(
       'insert into ccca.account (account_id, name, email, cpf, car_plate, is_passenger, is_driver, password) values ($1, $2, $3, $4, $5, $6, $7, $8)',
@@ -59,17 +66,18 @@ export class AccountDAODatabase implements AccountDAO {
 }
 
 export class AccountDAOMemory implements AccountDAO {
-  accounts: any[] = [];
+  accounts: Account[] = [];
 
-  getAccountById(accountId: string): Promise<any> {
-    return this.accounts.find((account) => account.accountId === accountId);
+  async getAccountById(accountId: string) {
+    const account = this.accounts.find((account) => account.accountId === accountId);
+    return account;
   }
 
-  async saveAccount(account: any) {
+  async saveAccount(account: Account) {
     this.accounts.push(account);
   }
 
-  getAccountByEmail(email: string): Promise<any> {
+  async getAccountByEmail(email: string) {
     return this.accounts.find((account) => account.email === email);
   }
 }
