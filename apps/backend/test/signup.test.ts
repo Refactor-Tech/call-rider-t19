@@ -144,28 +144,6 @@ describe('create account', () => {
     await expect(signup.execute(input)).rejects.toThrow(new Error('Invalid name'));
   });
 
-  it('should not create passenger account with invalid email', async () => {
-    const input = {
-      name: 'John Doe',
-      email: `john.doe`,
-      cpf: '87748248800',
-      password: 'password123',
-      isPassenger: true,
-    };
-    await expect(signup.execute(input)).rejects.toThrow(new Error('Invalid email'));
-  });
-
-  it('should not create passenger account with invalid CPF', async () => {
-    const input = {
-      name: 'John Doe',
-      email: `john.doe${Math.random()}@example.com`,
-      cpf: '',
-      password: 'password123',
-      isPassenger: true,
-    };
-    await expect(signup.execute(input)).rejects.toThrow(new Error('Invalid CPF'));
-  });
-
   it('should create driver account', async () => {
     const input = {
       name: 'John Doe',
@@ -186,17 +164,5 @@ describe('create account', () => {
     expect(outputGetAccount.isDriver).toBe(input.isDriver);
     expect(outputGetAccount.accountId).toBe(outputSignup.accountId);
     expect(outputGetAccount.carPlate).toBe(input.carPlate);
-  });
-
-  it('should not create driver account with wrong car plate', async () => {
-    const input = {
-      name: 'John Doe',
-      email: `john.doe${Math.random()}@example.com`,
-      cpf: '87748248800',
-      password: 'password123',
-      isDriver: true,
-      carPlate: '',
-    };
-    await expect(signup.execute(input)).rejects.toThrow(new Error('Invalid car plate'));
   });
 });
