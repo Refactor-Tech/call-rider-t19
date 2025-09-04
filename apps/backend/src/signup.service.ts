@@ -1,4 +1,3 @@
-import crypto from 'crypto';
 import MailerGateway from './mailer-gateway';
 import { AccountDAO } from './accountDAO';
 import Account from './Account';
@@ -10,8 +9,7 @@ export class Signup {
   ) {}
 
   async execute(input: any) {
-    const account = new Account(
-      crypto.randomUUID(),
+    const account = Account.create(
       input.name,
       input.email,
       input.cpf,

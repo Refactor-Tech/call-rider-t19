@@ -28,4 +28,17 @@ export default class Account {
   isValidCarPlate(carPlate: string) {
     return carPlate.match(/[A-Z]{3}[0-9]{4}/);
   }
+
+  static create(
+    name: string,
+    email: string,
+    cpf: string,
+    carPlate: string,
+    password: string,
+    isPassenger: boolean,
+    isDriver: boolean
+  ) {
+    const accountId = crypto.randomUUID();
+    return new Account(accountId, name, email, cpf, carPlate, password, isPassenger, isDriver);
+  }
 }
