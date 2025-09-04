@@ -1,18 +1,33 @@
 import { AccountRepository } from './account-repository';
-import { RideDAO } from './rideDAO';
+import { RideRepository } from './ride-repository';
 
 export default class GetRide {
   constructor(
     readonly accountDAO: AccountRepository,
-    readonly rideDAO: RideDAO
+    readonly rideDAO: RideRepository
   ) {}
 
   async execute(rideId: string): Promise<Output> {
-    const rideData = await this.rideDAO.getRideById(rideId);
-    const passengerData = await this.accountDAO.getAccountById(rideData.passengerId);
+    const ride = await this.rideDAO.getRideById(rideId);
+    const passengerAccount = await this.accountDAO.getAccountById(ride.passengerId);
+    if (!passengerAccount) throw new Error('Passenger not found');
     return {
-      ...rideData,
-      passengerName: passengerData.name,
+      rideId: ride.rideId,
+      passengerId: ride.passengerId,
+      passengerName: passengerAccount.name,
+      driverId: ride.driverId,
+      from: {
+        latitude: ride.fromLat,
+        longitude: ride.fromLong,
+      },
+      to: {
+        latitude: ride.toLat,
+        longitude: ride.toLong,
+      },
+      fare: ride.fare,
+      distance: ride.distance,
+      status: ride.status,
+      date: ride.date,
     };
   }
 }
@@ -21,7 +36,7 @@ type Output = {
   rideId: string;
   passengerId: string;
   passengerName: string;
-  driverId: string;
+  driverId: string | null;
   from: {
     latitude: number;
     longitude: number;

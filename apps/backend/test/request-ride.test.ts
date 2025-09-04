@@ -4,7 +4,7 @@ import { GetAccount } from '@/get-account.service';
 import { AccountDAODatabase, AccountDAOMemory } from '@/account-repository';
 import { MailerGatewayMemory } from '@/mailer-gateway';
 import sinon from 'sinon';
-import { RideDAODatabase } from '@/rideDAO';
+import { RideDAODatabase } from '@/ride-repository';
 import RequestRide from '@/request-ride.service';
 import GetRide from '@/get-ride.service';
 
@@ -15,13 +15,13 @@ let getRide: GetRide;
 
 beforeEach(() => {
   // const accountDAO = new AccountDAODatabase();
-  const accountDAO = new AccountDAOMemory();
-  const rideDAO = new RideDAODatabase();
+  const accountRepository = new AccountDAOMemory();
+  const rideRepository = new RideDAODatabase();
   const mailerGateway = new MailerGatewayMemory();
-  signup = new Signup(accountDAO, mailerGateway);
-  getAccount = new GetAccount(accountDAO);
-  requestRide = new RequestRide(accountDAO, rideDAO);
-  getRide = new GetRide(accountDAO, rideDAO);
+  signup = new Signup(accountRepository, mailerGateway);
+  getAccount = new GetAccount(accountRepository);
+  requestRide = new RequestRide(accountRepository, rideRepository);
+  getRide = new GetRide(accountRepository, rideRepository);
 });
 
 afterEach(() => {

@@ -1,38 +1,31 @@
 import { AccountRepository } from './account-repository';
-import { RideDAO } from './rideDAO';
+import Ride from './ride';
+import { RideRepository } from './ride-repository';
 
 export default class RequestRide {
   constructor(
-    readonly accountDAO: AccountRepository,
-    readonly rideDAO: RideDAO
+    readonly accountRepository: AccountRepository,
+    readonly rideRepository: RideRepository
   ) {}
 
   async execute(input: Input) {
-    const accountData = await this.accountDAO.getAccountById(input.passengerId);
+    const accountData = await this.accountRepository.getAccountById(input.passengerId);
     if (!accountData?.isPassenger) {
       throw new Error('Only passengers can request rides');
     }
-    const hasActiveRide = await this.rideDAO.hasActiveRideByPassengerId(input.passengerId);
+    const hasActiveRide = await this.rideRepository.hasActiveRideByPassengerId(input.passengerId);
     if (hasActiveRide) {
       throw new Error('Passenger already has an active ride');
     }
-    const ride = {
-      rideId: crypto.randomUUID(),
-      passengerId: input.passengerId,
-      from: {
-        latitude: input.from.latitude,
-        longitude: input.from.longitude,
-      },
-      to: {
-        latitude: input.to.latitude,
-        longitude: input.to.longitude,
-      },
-      status: 'requested',
-      fare: 0,
-      distance: 0,
-      date: new Date(),
-    };
-    await this.rideDAO.saveRide(ride);
+    const ride = Ride.create(
+      input.passengerId,
+      input.from.latitude,
+      input.from.longitude,
+      input.to.latitude,
+      input.to.longitude
+    );
+
+    await this.rideRepository.saveRide(ride);
     return {
       rideId: ride.rideId,
     };
