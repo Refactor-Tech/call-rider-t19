@@ -1,10 +1,10 @@
 import MailerGateway from './mailer-gateway';
-import { AccountDAO } from './accountDAO';
+import { AccountRepository } from './account-repository';
 import Account from './Account';
 
 export class Signup {
   constructor(
-    readonly accountDAO: AccountDAO,
+    readonly accountDAO: AccountRepository,
     readonly mailerGateway: MailerGateway
   ) {}
 

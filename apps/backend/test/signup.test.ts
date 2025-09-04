@@ -1,9 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Signup } from '@/signup.service';
 import { GetAccount } from '@/get-account.service';
-import { AccountDAODatabase, AccountDAOMemory } from '@/accountDAO';
+import { AccountDAODatabase, AccountDAOMemory } from '@/account-repository';
 import { MailerGatewayMemory } from '@/mailer-gateway';
 import sinon from 'sinon';
+import Account from '@/Account';
 
 let signup: Signup;
 let getAccount: GetAccount;
@@ -56,7 +57,20 @@ describe('create account', () => {
       carPlate: '',
       isDriver: false,
     };
-    sinon.stub(AccountDAODatabase.prototype, 'getAccountById').resolves(input);
+    sinon
+      .stub(AccountDAODatabase.prototype, 'getAccountById')
+      .resolves(
+        new Account(
+          input.accountId,
+          input.name,
+          input.email,
+          input.cpf,
+          input.carPlate,
+          input.password,
+          input.isPassenger,
+          input.isDriver
+        )
+      );
     const outputSignup = await signup.execute(input);
     const outputGetAccount = await getAccount.execute(outputSignup.accountId);
     expect(outputSignup).toHaveProperty('accountId');

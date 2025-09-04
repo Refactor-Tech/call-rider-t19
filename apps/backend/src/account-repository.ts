@@ -2,12 +2,12 @@ import pgp from 'pg-promise';
 import { GetAccountData } from './get-account.service';
 import Account from './Account';
 
-export interface AccountDAO {
+export interface AccountRepository {
   saveAccount(account: Account): Promise<void>;
   getAccountByEmail(email: string): Promise<Account | undefined>;
   getAccountById(id: string): Promise<Account | undefined>;
 }
-export class AccountDAODatabase implements AccountDAO {
+export class AccountDAODatabase implements AccountRepository {
   async getAccountByEmail(email: string) {
     const connection = pgp()('postgres://admin:123456@localhost:5432/app');
     const [account] = await connection.query('select * from ccca.account where email = $1', [
@@ -65,7 +65,7 @@ export class AccountDAODatabase implements AccountDAO {
   }
 }
 
-export class AccountDAOMemory implements AccountDAO {
+export class AccountDAOMemory implements AccountRepository {
   accounts: Account[] = [];
 
   async getAccountById(accountId: string) {

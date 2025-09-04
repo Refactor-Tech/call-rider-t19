@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Signup } from '@/signup.service';
 import { GetAccount } from '@/get-account.service';
-import { AccountDAODatabase, AccountDAOMemory } from '@/accountDAO';
+import { AccountDAODatabase, AccountDAOMemory } from '@/account-repository';
 import { MailerGatewayMemory } from '@/mailer-gateway';
 import sinon from 'sinon';
 import { RideDAODatabase } from '@/rideDAO';

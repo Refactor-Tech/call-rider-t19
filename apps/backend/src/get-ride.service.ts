@@ -1,9 +1,9 @@
-import { AccountDAO } from './accountDAO';
+import { AccountRepository } from './account-repository';
 import { RideDAO } from './rideDAO';
 
 export default class GetRide {
   constructor(
-    readonly accountDAO: AccountDAO,
+    readonly accountDAO: AccountRepository,
     readonly rideDAO: RideDAO
   ) {}
 

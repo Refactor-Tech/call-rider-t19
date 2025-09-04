@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { Signup } from './signup.service';
 import { GetAccount } from './get-account.service';
-import { AccountDAODatabase } from './accountDAO';
+import { AccountDAODatabase } from './account-repository';
 import { MailerGatewayMemory } from './mailer-gateway';
 
 const app = express();

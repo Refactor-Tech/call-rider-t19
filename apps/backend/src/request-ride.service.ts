@@ -1,15 +1,15 @@
-import { AccountDAO } from './accountDAO';
+import { AccountRepository } from './account-repository';
 import { RideDAO } from './rideDAO';
 
 export default class RequestRide {
   constructor(
-    readonly accountDAO: AccountDAO,
+    readonly accountDAO: AccountRepository,
     readonly rideDAO: RideDAO
   ) {}
 
   async execute(input: Input) {
     const accountData = await this.accountDAO.getAccountById(input.passengerId);
-    if (!accountData.isPassenger) {
+    if (!accountData?.isPassenger) {
       throw new Error('Only passengers can request rides');
     }
     const hasActiveRide = await this.rideDAO.hasActiveRideByPassengerId(input.passengerId);
