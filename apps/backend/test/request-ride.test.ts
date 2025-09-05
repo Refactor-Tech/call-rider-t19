@@ -1,22 +1,25 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Signup } from '@/signup.service';
 import { GetAccount } from '@/get-account.service';
-import { AccountDAODatabase, AccountDAOMemory } from '@/account-repository';
+import { AccountRepositoryDatabase, AccountDAOMemory } from '@/account-repository';
 import { MailerGatewayMemory } from '@/mailer-gateway';
 import sinon from 'sinon';
 import { RideDAODatabase } from '@/ride-repository';
 import RequestRide from '@/request-ride.service';
 import GetRide from '@/get-ride.service';
+import { DatabaseConnection, PgPromiseAdapter } from '@/database-connection';
 
+let connection: DatabaseConnection;
 let signup: Signup;
 let getAccount: GetAccount;
 let requestRide: RequestRide;
 let getRide: GetRide;
 
 beforeEach(() => {
+  connection = new PgPromiseAdapter();
   // const accountDAO = new AccountDAODatabase();
   const accountRepository = new AccountDAOMemory();
-  const rideRepository = new RideDAODatabase();
+  const rideRepository = new RideDAODatabase(connection);
   const mailerGateway = new MailerGatewayMemory();
   signup = new Signup(accountRepository, mailerGateway);
   getAccount = new GetAccount(accountRepository);
@@ -24,8 +27,9 @@ beforeEach(() => {
   getRide = new GetRide(accountRepository, rideRepository);
 });
 
-afterEach(() => {
+afterEach(async () => {
   sinon.restore();
+  await connection.close();
 });
 
 describe('request ride', () => {

@@ -1,19 +1,18 @@
-import pgp from 'pg-promise';
-import { GetAccountData } from './get-account.service';
-import Account from './Account';
+import Account from './account';
+import { DatabaseConnection } from './database-connection';
 
 export interface AccountRepository {
   saveAccount(account: Account): Promise<void>;
   getAccountByEmail(email: string): Promise<Account | undefined>;
   getAccountById(id: string): Promise<Account | undefined>;
 }
-export class AccountDAODatabase implements AccountRepository {
+export class AccountRepositoryDatabase implements AccountRepository {
+  constructor(readonly connection: DatabaseConnection) {}
+
   async getAccountByEmail(email: string) {
-    const connection = pgp()('postgres://admin:123456@localhost:5432/app');
-    const [account] = await connection.query('select * from ccca.account where email = $1', [
+    const [account] = await this.connection.query('select * from ccca.account where email = $1', [
       email,
     ]);
-    await connection.$pool.end();
     if (!account) return;
     return new Account(
       account.account_id,
@@ -28,11 +27,10 @@ export class AccountDAODatabase implements AccountRepository {
   }
 
   async getAccountById(id: string) {
-    const connection = pgp()('postgres://admin:123456@localhost:5432/app');
-    const [account] = await connection.query('select * from ccca.account where account_id = $1', [
-      id,
-    ]);
-    await connection.$pool.end();
+    const [account] = await this.connection.query(
+      'select * from ccca.account where account_id = $1',
+      [id]
+    );
     return new Account(
       account.account_id,
       account.name,
@@ -46,8 +44,7 @@ export class AccountDAODatabase implements AccountRepository {
   }
 
   async saveAccount(account: Account) {
-    const connection = pgp()('postgres://admin:123456@localhost:5432/app');
-    await connection.query(
+    await this.connection.query(
       'insert into ccca.account (account_id, name, email, cpf, car_plate, is_passenger, is_driver, password) values ($1, $2, $3, $4, $5, $6, $7, $8)',
       [
         account.accountId,
@@ -60,8 +57,6 @@ export class AccountDAODatabase implements AccountRepository {
         account.password,
       ]
     );
-
-    await connection.$pool.end();
   }
 }
 

@@ -1,5 +1,5 @@
-import pgp from 'pg-promise';
 import Ride from './ride';
+import { DatabaseConnection } from './database-connection';
 
 export interface RideRepository {
   saveRide(ride: Ride): Promise<void>;
@@ -8,12 +8,12 @@ export interface RideRepository {
 }
 
 export class RideDAODatabase implements RideRepository {
+  constructor(readonly connection: DatabaseConnection) {}
+
   async getRideById(rideId: string): Promise<Ride> {
-    const connection = pgp()('postgres://admin:123456@localhost:5432/app');
-    const [rideData] = await connection.query('select * from ccca.ride where ride_id = $1', [
+    const [rideData] = await this.connection.query('select * from ccca.ride where ride_id = $1', [
       rideId,
     ]);
-    await connection.$pool.end();
     if (!rideData) throw new Error('Ride not found');
     return new Ride(
       rideData.ride_id,
@@ -31,18 +31,15 @@ export class RideDAODatabase implements RideRepository {
   }
 
   async hasActiveRideByPassengerId(passengerId: string): Promise<boolean> {
-    const connection = pgp()('postgres://admin:123456@localhost:5432/app');
-    const [rideData] = await connection.query(
+    const [rideData] = await this.connection.query(
       "select 1 from ccca.ride where passenger_id = $1 and status not in ('completed', 'cancelled')",
       [passengerId]
     );
-    await connection.$pool.end();
     return !!rideData;
   }
 
   async saveRide(ride: Ride) {
-    const connection = pgp()('postgres://admin:123456@localhost:5432/app');
-    await connection.query(
+    await this.connection.query(
       'insert into ccca.ride (ride_id, passenger_id, driver_id, from_lat, from_long, to_lat, to_long, fare, distance, status, date) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
       [
         ride.rideId,
@@ -58,6 +55,5 @@ export class RideDAODatabase implements RideRepository {
         ride.date,
       ]
     );
-    await connection.$pool.end();
   }
 }

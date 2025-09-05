@@ -2,17 +2,20 @@ import express from 'express';
 import cors from 'cors';
 import { Signup } from './signup.service';
 import { GetAccount } from './get-account.service';
-import { AccountDAODatabase } from './account-repository';
+import { AccountRepositoryDatabase } from './account-repository';
 import { MailerGatewayMemory } from './mailer-gateway';
+import { PgPromiseAdapter } from './database-connection';
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-const accountDAO = new AccountDAODatabase();
+const connection = new PgPromiseAdapter();
+
+const accountRepository = new AccountRepositoryDatabase(connection);
 const mailerGateway = new MailerGatewayMemory();
-const signup = new Signup(accountDAO, mailerGateway);
-const getAccount = new GetAccount(accountDAO);
+const signup = new Signup(accountRepository, mailerGateway);
+const getAccount = new GetAccount(accountRepository);
 
 app.post('/signup', async function (req, res) {
   const input = req.body;

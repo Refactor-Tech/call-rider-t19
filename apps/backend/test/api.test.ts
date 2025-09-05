@@ -15,10 +15,7 @@ describe('create account', () => {
       isPassenger: true,
     };
 
-    const responseSignup = await axios.post(
-      'http://localhost:3000/signup',
-      input
-    );
+    const responseSignup = await axios.post('http://localhost:3000/signup', input);
     expect(responseSignup.status).toBe(200);
     const outputSignup = responseSignup.data;
     const responseGetAccount = await axios.get(
@@ -41,10 +38,7 @@ describe('create account', () => {
       password: 'password123',
       isPassenger: true,
     };
-    const responseSignup = await axios.post(
-      'http://localhost:3000/signup',
-      input
-    );
+    const responseSignup = await axios.post('http://localhost:3000/signup', input);
     expect(responseSignup.status).toBe(422);
     const outputSignup = responseSignup.data;
     expect(outputSignup.message).toBe('Invalid name');

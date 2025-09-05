@@ -1,24 +1,28 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Signup } from '@/signup.service';
 import { GetAccount } from '@/get-account.service';
-import { AccountDAODatabase, AccountDAOMemory } from '@/account-repository';
+import { AccountRepositoryDatabase, AccountDAOMemory } from '@/account-repository';
 import { MailerGatewayMemory } from '@/mailer-gateway';
 import sinon from 'sinon';
-import Account from '@/Account';
+import Account from '@/account';
+import { DatabaseConnection, PgPromiseAdapter } from '@/database-connection';
 
+let connection: DatabaseConnection;
 let signup: Signup;
 let getAccount: GetAccount;
 
 beforeEach(() => {
-  // const accountDAO = new AccountDAODatabase();
-  const accountDAO = new AccountDAOMemory();
+  connection = new PgPromiseAdapter();
+  const accountDAO = new AccountRepositoryDatabase(connection);
+  // const accountDAO = new AccountDAOMemory();
   const mailerGateway = new MailerGatewayMemory();
   signup = new Signup(accountDAO, mailerGateway);
   getAccount = new GetAccount(accountDAO);
 });
 
-afterEach(() => {
+afterEach(async () => {
   sinon.restore();
+  await connection.close();
 });
 
 describe('create account', () => {
@@ -45,8 +49,8 @@ describe('create account', () => {
 
   it('should create passenger account using stub', async () => {
     sinon.stub(MailerGatewayMemory.prototype, 'send').resolves();
-    sinon.stub(AccountDAODatabase.prototype, 'getAccountByEmail').resolves();
-    sinon.stub(AccountDAODatabase.prototype, 'saveAccount').resolves();
+    sinon.stub(AccountRepositoryDatabase.prototype, 'getAccountByEmail').resolves();
+    sinon.stub(AccountRepositoryDatabase.prototype, 'saveAccount').resolves();
     const input = {
       accountId: '',
       name: 'John Doe',
@@ -57,11 +61,12 @@ describe('create account', () => {
       carPlate: '',
       isDriver: false,
     };
+    const outputSignup = await signup.execute(input);
     sinon
-      .stub(AccountDAODatabase.prototype, 'getAccountById')
+      .stub(AccountRepositoryDatabase.prototype, 'getAccountById')
       .resolves(
         new Account(
-          input.accountId,
+          outputSignup.accountId,
           input.name,
           input.email,
           input.cpf,
@@ -71,14 +76,13 @@ describe('create account', () => {
           input.isDriver
         )
       );
-    const outputSignup = await signup.execute(input);
     const outputGetAccount = await getAccount.execute(outputSignup.accountId);
     expect(outputSignup).toHaveProperty('accountId');
+    expect(outputGetAccount.accountId).toBe(outputSignup.accountId);
     expect(outputGetAccount.name).toBe(input.name);
     expect(outputGetAccount.email).toBe(input.email);
     expect(outputGetAccount.cpf).toBe(input.cpf);
     expect(outputGetAccount.isPassenger).toBe(input.isPassenger);
-    expect(outputGetAccount.accountId).toBe(outputSignup.accountId);
   });
 
   it('should create passenger account using spy', async () => {
