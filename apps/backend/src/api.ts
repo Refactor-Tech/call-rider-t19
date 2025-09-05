@@ -3,9 +3,9 @@ import { GetAccount } from './get-account.service';
 import { AccountRepositoryDatabase } from './account-repository';
 import { MailerGatewayMemory } from './mailer-gateway';
 import { PgPromiseAdapter } from './database-connection';
-import { ExpressAdapter } from './http-server';
+import { ExpressAdapter, FastifyAdapter } from './http-server';
 
-const httpServer = new ExpressAdapter();
+const httpServer = new FastifyAdapter();
 const connection = new PgPromiseAdapter();
 
 httpServer.register('post', '/signup', async (params: any, body: any) => {
