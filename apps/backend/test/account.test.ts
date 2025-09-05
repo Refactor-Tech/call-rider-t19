@@ -1,4 +1,4 @@
-import Account from '@/Account';
+import Account from '@/account';
 import { describe, it, expect } from 'vitest';
 
 describe('Account', () => {
