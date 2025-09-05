@@ -6,6 +6,7 @@ import { PgPromiseAdapter } from './database-connection';
 import { ExpressAdapter, FastifyAdapter } from './http-server';
 
 const httpServer = new FastifyAdapter();
+// const httpServer = new ExpressAdapter();
 const connection = new PgPromiseAdapter();
 
 httpServer.register('post', '/signup', async (params: any, body: any) => {
