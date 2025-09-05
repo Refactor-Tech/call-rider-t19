@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { describe, it, expect } from 'vitest';
-import { validateCpf } from '../src/validate-cpf';
+import { validateCpf } from '../src/core/domain/validate-cpf';
 
 const validCPFs = [
   '123.456.789-09',

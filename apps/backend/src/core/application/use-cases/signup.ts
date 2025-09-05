@@ -1,6 +1,6 @@
-import MailerGateway from './mailer-gateway';
-import { AccountRepository } from './account-repository';
-import Account from './Account';
+import MailerGateway from '@/infra/gateways/mailer-gateway';
+import { AccountRepository } from '@/infra/repository/account-repository';
+import Account from '@/core/domain/account';
 
 export class Signup {
   constructor(

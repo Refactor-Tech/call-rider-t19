@@ -1,11 +1,17 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { Signup } from '@/signup.service';
-import { GetAccount } from '@/get-account.service';
-import { AccountRepositoryDatabase, AccountDAOMemory } from '@/account-repository';
-import { MailerGatewayMemory } from '@/mailer-gateway';
+import { Signup } from '@/core/application/use-cases/signup';
+import { GetAccount } from '@/core/application/use-cases/get-account';
+import {
+  AccountRepositoryDatabase,
+  AccountDAOMemory,
+} from '@/infra/repository/account-repository';
+import { MailerGatewayMemory } from '@/infra/gateways/mailer-gateway';
 import sinon from 'sinon';
-import Account from '@/account';
-import { DatabaseConnection, PgPromiseAdapter } from '@/database-connection';
+import Account from '@/core/domain/account';
+import {
+  DatabaseConnection,
+  PgPromiseAdapter,
+} from '@/infra/database/database-connection';
 
 let connection: DatabaseConnection;
 let signup: Signup;

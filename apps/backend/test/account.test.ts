@@ -1,4 +1,4 @@
-import Account from '@/account';
+import Account from '@/core/domain/account';
 import { describe, it, expect } from 'vitest';
 
 describe('Account', () => {
@@ -24,13 +24,29 @@ describe('Account', () => {
 
   it('should not create account with invalid name', () => {
     expect(() => {
-      Account.create('', 'john.doe@example.com', '87748248800', '', 'password123', true, false);
+      Account.create(
+        '',
+        'john.doe@example.com',
+        '87748248800',
+        '',
+        'password123',
+        true,
+        false
+      );
     }).toThrowError('Invalid name');
   });
 
   it('should not create account with invalid email', () => {
     expect(() => {
-      Account.create('John Doe', 'invalid-email', '87748248800', '', 'password123', true, false);
+      Account.create(
+        'John Doe',
+        'invalid-email',
+        '87748248800',
+        '',
+        'password123',
+        true,
+        false
+      );
     }).toThrowError('Invalid email');
   });
 

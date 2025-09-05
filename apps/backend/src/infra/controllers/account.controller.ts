@@ -1,6 +1,6 @@
-import { GetAccount } from './get-account.service';
-import HttpServer from './http-server';
-import { Signup } from './signup.service';
+import { GetAccount } from '@/core/application/use-cases/get-account';
+import HttpServer from '@/infra/http/http-server';
+import { Signup } from '@/core/application/use-cases/signup';
 
 export default class AccountController {
   constructor(

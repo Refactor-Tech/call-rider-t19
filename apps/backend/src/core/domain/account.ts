@@ -13,7 +13,8 @@ export default class Account {
   ) {
     if (!this.isValidName()) throw new Error('Invalid name');
     if (!this.isValidEmail()) throw new Error('Invalid email');
-    if (this.isDriver && !this.isValidCarPlate(carPlate)) throw new Error('Invalid car plate');
+    if (this.isDriver && !this.isValidCarPlate(carPlate))
+      throw new Error('Invalid car plate');
     if (!validateCpf(cpf)) throw new Error('Invalid CPF');
   }
 
@@ -39,6 +40,15 @@ export default class Account {
     isDriver: boolean
   ) {
     const accountId = crypto.randomUUID();
-    return new Account(accountId, name, email, cpf, carPlate, password, isPassenger, isDriver);
+    return new Account(
+      accountId,
+      name,
+      email,
+      cpf,
+      carPlate,
+      password,
+      isPassenger,
+      isDriver
+    );
   }
 }

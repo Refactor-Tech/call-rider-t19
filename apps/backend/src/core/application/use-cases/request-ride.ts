@@ -1,6 +1,6 @@
-import { AccountRepository } from './account-repository';
-import Ride from './ride';
-import { RideRepository } from './ride-repository';
+import Ride from '@/core/domain/ride';
+import { AccountRepository } from '@/infra/repository/account-repository';
+import { RideRepository } from '@/infra/repository/ride-repository';
 
 export default class RequestRide {
   constructor(
@@ -13,7 +13,9 @@ export default class RequestRide {
     if (!accountData?.isPassenger) {
       throw new Error('Only passengers can request rides');
     }
-    const hasActiveRide = await this.rideRepository.hasActiveRideByPassengerId(input.passengerId);
+    const hasActiveRide = await this.rideRepository.hasActiveRideByPassengerId(
+      input.passengerId
+    );
     if (hasActiveRide) {
       throw new Error('Passenger already has an active ride');
     }

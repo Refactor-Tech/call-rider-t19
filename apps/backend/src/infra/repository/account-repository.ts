@@ -1,5 +1,5 @@
-import Account from './account';
-import { DatabaseConnection } from './database-connection';
+import Account from '@/core/domain/account';
+import { DatabaseConnection } from '@/infra/database/database-connection';
 
 export interface AccountRepository {
   saveAccount(account: Account): Promise<void>;
@@ -10,9 +10,10 @@ export class AccountRepositoryDatabase implements AccountRepository {
   constructor(readonly connection: DatabaseConnection) {}
 
   async getAccountByEmail(email: string) {
-    const [account] = await this.connection.query('select * from ccca.account where email = $1', [
-      email,
-    ]);
+    const [account] = await this.connection.query(
+      'select * from ccca.account where email = $1',
+      [email]
+    );
     if (!account) return;
     return new Account(
       account.account_id,

@@ -1,5 +1,5 @@
-import Ride from './ride';
-import { DatabaseConnection } from './database-connection';
+import Ride from '@/core/domain/ride';
+import { DatabaseConnection } from '@/infra/database/database-connection';
 
 export interface RideRepository {
   saveRide(ride: Ride): Promise<void>;
@@ -11,9 +11,10 @@ export class RideDAODatabase implements RideRepository {
   constructor(readonly connection: DatabaseConnection) {}
 
   async getRideById(rideId: string): Promise<Ride> {
-    const [rideData] = await this.connection.query('select * from ccca.ride where ride_id = $1', [
-      rideId,
-    ]);
+    const [rideData] = await this.connection.query(
+      'select * from ccca.ride where ride_id = $1',
+      [rideId]
+    );
     if (!rideData) throw new Error('Ride not found');
     return new Ride(
       rideData.ride_id,
