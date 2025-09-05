@@ -1,35 +1,25 @@
-import express from 'express';
-import cors from 'cors';
 import { Signup } from './signup.service';
 import { GetAccount } from './get-account.service';
 import { AccountRepositoryDatabase } from './account-repository';
 import { MailerGatewayMemory } from './mailer-gateway';
 import { PgPromiseAdapter } from './database-connection';
+import { ExpressAdapter } from './http-server';
 
-const app = express();
-app.use(express.json());
-app.use(cors());
-
+const httpServer = new ExpressAdapter();
 const connection = new PgPromiseAdapter();
 
-const accountRepository = new AccountRepositoryDatabase(connection);
-const mailerGateway = new MailerGatewayMemory();
-const signup = new Signup(accountRepository, mailerGateway);
-const getAccount = new GetAccount(accountRepository);
-
-app.post('/signup', async function (req, res) {
-  const input = req.body;
-  try {
-    const output = await signup.execute(input);
-    res.json(output);
-  } catch (e: any) {
-    res.status(422).json({ message: e.message });
-  }
+httpServer.register('post', '/signup', async (params: any, body: any) => {
+  const accountRepository = new AccountRepositoryDatabase(connection);
+  const mailerGateway = new MailerGatewayMemory();
+  const signup = new Signup(accountRepository, mailerGateway);
+  const output = await signup.execute(body);
+  return output;
+});
+httpServer.register('get', '/accounts/:id', async (params: any, body: any) => {
+  const accountRepository = new AccountRepositoryDatabase(connection);
+  const getAccount = new GetAccount(accountRepository);
+  const output = await getAccount.execute(params.id);
+  return output;
 });
 
-app.get('/accounts/:id', async function (req, res) {
-  const output = await getAccount.execute(req.params.id);
-  res.json(output);
-});
-
-app.listen(3000);
+httpServer.listen(3000);
