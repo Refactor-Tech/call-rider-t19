@@ -3,6 +3,33 @@
 Bem-vindo ao repositório do **Call Rider v19**!  
 Aqui organizamos todo o projeto — backend, frontend e infraestrutura — em um **monorepo** simples, escalável e padronizado.
 
+## 📋 Índice
+
+- [📦 Call Rider v19 Monorepo](#-call-rider-v19-monorepo)
+  - [📋 Índice](#-índice)
+  - [🏩️ Estrutura do Projeto](#️-estrutura-do-projeto)
+  - [🚀 Como Rodar o Projeto](#-como-rodar-o-projeto)
+    - [Pré-requisitos](#pré-requisitos)
+    - [Instalação (uma vez)](#instalação-uma-vez)
+    - [Rodar tudo](#rodar-tudo)
+    - [Rodar todos os testes](#rodar-todos-os-testes)
+  - [🛠️ Scripts Globais](#️-scripts-globais)
+  - [Como Adicionar Dependências no Monorepo](#como-adicionar-dependências-no-monorepo)
+    - [1. Adicionar uma dependência de **runtime** a um app específico](#1-adicionar-uma-dependência-de-runtime-a-um-app-específico)
+    - [2. Adicionar uma dependência de **desenvolvimento** a um app específico](#2-adicionar-uma-dependência-de-desenvolvimento-a-um-app-específico)
+  - [3. Adicionar uma dependência **global** para todos os apps](#3-adicionar-uma-dependência-global-para-todos-os-apps)
+  - [Regras de Boas Práticas para Dependências](#regras-de-boas-práticas-para-dependências)
+  - [📦 Atualizando Pacotes](#-atualizando-pacotes)
+    - [Como atualizar todos os pacotes](#como-atualizar-todos-os-pacotes)
+    - [Verificar pacotes desatualizados](#verificar-pacotes-desatualizados)
+    - [Forçar major updates](#forçar-major-updates)
+    - [⚠️ Possíveis Problemas e Soluções](#️-possíveis-problemas-e-soluções)
+    - [🔄 Rotina Recomendada](#-rotina-recomendada)
+  - [Status Atual do Projeto](#status-atual-do-projeto)
+  - [🧱 Boas Práticas](#-boas-práticas)
+  - [🛡️ Contribuindo](#️-contribuindo)
+  - [📚 Recursos Úteis](#-recursos-úteis)
+
 ---
 
 ## 🏩️ Estrutura do Projeto
@@ -133,6 +160,94 @@ pnpm add -D -w typescript vitest tsx
 | Dependência só de dev (tipagens, tests)           | Adicionar com `-D`                        |
 
 **Não polua apps com dependências desnecessárias!**
+
+---
+
+## 📦 Atualizando Pacotes
+
+### Como atualizar todos os pacotes
+
+Para manter o projeto sempre atualizado com as versões mais recentes:
+
+```bash
+# Atualizar pacotes do backend
+pnpm update --filter backend
+
+# Atualizar pacotes do frontend
+pnpm update --filter frontend
+
+# Atualizar pacotes globais (root)
+pnpm update -w
+```
+
+### Verificar pacotes desatualizados
+
+```bash
+# Ver todos os pacotes desatualizados
+pnpm outdated
+
+# Ver pacotes desatualizados por workspace
+pnpm outdated --filter backend
+pnpm outdated --filter frontend
+```
+
+### Forçar major updates
+
+Por padrão, o `pnpm update` não atualiza major versions. Para forçar:
+
+```bash
+# Atualizar para a versão mais recente (incluindo major)
+pnpm add package-name@latest --filter backend
+
+# Exemplo prático:
+pnpm add -D typescript@latest --filter frontend
+```
+
+### ⚠️ Possíveis Problemas e Soluções
+
+**1. Conflitos de versão entre workspaces:**
+
+```bash
+# Limpar node_modules e reinstalar
+rm -rf node_modules apps/*/node_modules
+pnpm install
+```
+
+**2. Lockfile desatualizado:**
+
+```bash
+# Regenerar o lockfile
+rm pnpm-lock.yaml
+pnpm install
+```
+
+**3. Breaking changes em major updates:**
+
+- ⚠️ Sempre teste após major updates
+- 📚 Consulte o CHANGELOG dos pacotes
+- 🧪 Execute todos os testes: `pnpm test -r`
+
+**4. Problemas com TypeScript após updates:**
+
+```bash
+# Verificar compatibilidade de tipos
+pnpm --filter frontend run build
+pnpm --filter backend run build
+```
+
+**5. Cache corrompido:**
+
+```bash
+# Limpar cache do pnpm
+pnpm store prune
+```
+
+### 🔄 Rotina Recomendada
+
+1. **Semanalmente:** `pnpm outdated` para verificar updates
+2. **Mensalmente:** Atualizar minor/patch versions
+3. **Trimestralmente:** Avaliar major updates
+4. **Sempre:** Testar após atualizações
 
 ---
 
