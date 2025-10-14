@@ -11,15 +11,15 @@
   },
   "dependencies": {
     "@fastify/cors": "^11.1.0",
-    "axios": "^1.8.4",
+    "axios": "^1.12.2",
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "fastify": "^5.6.0",
-    "pg-promise": "^11.13.0"
+    "fastify": "^5.6.1",
+    "pg-promise": "^12.2.0"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.1",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
     "@types/sinon": "^17.0.4",
     "prettier": "^3.6.2",
     "sinon": "^21.0.0"
