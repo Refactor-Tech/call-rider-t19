@@ -1,33 +1,33 @@
-import { validateCpf } from './validate-cpf';
+import CarPlate from './value-objects/car-plate';
+import CPF from './value-objects/cpf';
+import Email from './value-objects/email';
+import Name from './value-objects/name';
+import Password from './value-objects/password';
 
 export default class Account {
+  private name: Name;
+  private email: Email;
+  private cpf: CPF;
+  private carPlate: CarPlate;
+  private password: Password;
+
   constructor(
     readonly accountId: string,
-    readonly name: string,
-    readonly email: string,
-    readonly cpf: string,
-    readonly carPlate: string,
-    readonly password: string,
+    name: string,
+    email: string,
+    cpf: string,
+    carPlate: string,
+    password: string,
     readonly isPassenger: boolean,
     readonly isDriver: boolean
   ) {
-    if (!this.isValidName()) throw new Error('Invalid name');
-    if (!this.isValidEmail()) throw new Error('Invalid email');
-    if (this.isDriver && !this.isValidCarPlate(carPlate))
-      throw new Error('Invalid car plate');
-    if (!validateCpf(cpf)) throw new Error('Invalid CPF');
-  }
-
-  isValidName() {
-    return this.name.match(/[a-zA-Z] [a-zA-Z]+/);
-  }
-
-  isValidEmail() {
-    return this.email.match(/^(.+)@(.+)$/);
-  }
-
-  isValidCarPlate(carPlate: string) {
-    return carPlate.match(/[A-Z]{3}[0-9]{4}/);
+    this.name = new Name(name);
+    this.email = new Email(email);
+    this.cpf = new CPF(cpf);
+    this.carPlate = new CarPlate(carPlate);
+    this.password = new Password(password);
+    // if (this.isDriver && !this.isValidCarPlate(carPlate))
+    //   throw new Error('Invalid car plate');
   }
 
   static create(
@@ -50,5 +50,25 @@ export default class Account {
       isPassenger,
       isDriver
     );
+  }
+
+  getName() {
+    return this.name.getValue();
+  }
+
+  getEmail() {
+    return this.email.getValue();
+  }
+
+  getCpf() {
+    return this.cpf.getValue();
+  }
+
+  getCarPlate() {
+    return this.carPlate.getValue();
+  }
+
+  getPassword() {
+    return this.password.getValue();
   }
 }

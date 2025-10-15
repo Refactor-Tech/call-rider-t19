@@ -21,7 +21,7 @@ export class Signup {
     const existingAccount = await this.accountDAO.getAccountByEmail(input.email);
     if (existingAccount) throw new Error('Duplicated account');
     await this.accountDAO.saveAccount(account);
-    await this.mailerGateway?.send(account.email, 'Welcome', '');
+    await this.mailerGateway?.send(account.getEmail(), 'Welcome', '');
     return {
       accountId: account.accountId,
     };

@@ -13,11 +13,11 @@ describe('Account', () => {
       false
     );
     expect(account).toBeInstanceOf(Account);
-    expect(account.name).toBe('John Doe');
-    expect(account.email).toBe('john.doe@example.com');
-    expect(account.cpf).toBe('87748248800');
-    expect(account.carPlate).toBe('');
-    expect(account.password).toBe('password123');
+    expect(account.getName()).toBe('John Doe');
+    expect(account.getEmail()).toBe('john.doe@example.com');
+    expect(account.getCpf()).toBe('87748248800');
+    expect(account.getCarPlate()).toBe('');
+    expect(account.getPassword()).toBe('password123');
     expect(account.isPassenger).toBe(true);
     expect(account.isDriver).toBe(false);
   });

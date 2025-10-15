@@ -14,7 +14,7 @@ export default class GetRide {
     return {
       rideId: ride.rideId,
       passengerId: ride.passengerId,
-      passengerName: passengerAccount.name,
+      passengerName: passengerAccount.getName(),
       driverId: ride.driverId,
       from: {
         latitude: ride.fromLat,

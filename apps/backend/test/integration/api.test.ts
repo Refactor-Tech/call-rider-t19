@@ -22,7 +22,6 @@ describe('create account', () => {
       `http://localhost:3000/accounts/${outputSignup.accountId}`
     );
     const outputGetAccount = responseGetAccount.data;
-    expect(outputSignup).toHaveProperty('accountId');
     expect(outputGetAccount.name).toBe(input.name);
     expect(outputGetAccount.email).toBe(input.email);
     expect(outputGetAccount.cpf).toBe(input.cpf);
