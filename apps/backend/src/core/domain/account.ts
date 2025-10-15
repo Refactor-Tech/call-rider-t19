@@ -3,8 +3,10 @@ import CPF from './value-objects/cpf';
 import Email from './value-objects/email';
 import Name from './value-objects/name';
 import Password from './value-objects/password';
+import UUID from './value-objects/uuid';
 
 export default class Account {
+  private accountId: UUID;
   private name: Name;
   private email: Email;
   private cpf: CPF;
@@ -12,7 +14,7 @@ export default class Account {
   private password: Password;
 
   constructor(
-    readonly accountId: string,
+    accountId: string,
     name: string,
     email: string,
     cpf: string,
@@ -21,6 +23,7 @@ export default class Account {
     readonly isPassenger: boolean,
     readonly isDriver: boolean
   ) {
+    this.accountId = new UUID(accountId);
     this.name = new Name(name);
     this.email = new Email(email);
     this.cpf = new CPF(cpf);
@@ -39,9 +42,9 @@ export default class Account {
     isPassenger: boolean,
     isDriver: boolean
   ) {
-    const accountId = crypto.randomUUID();
+    const accountId = UUID.create();
     return new Account(
-      accountId,
+      accountId.getValue(),
       name,
       email,
       cpf,
@@ -50,6 +53,10 @@ export default class Account {
       isPassenger,
       isDriver
     );
+  }
+
+  getAccountId() {
+    return this.accountId.getValue();
   }
 
   getName() {

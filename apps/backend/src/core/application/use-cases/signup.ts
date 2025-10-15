@@ -23,7 +23,7 @@ export class Signup {
     await this.accountDAO.saveAccount(account);
     await this.mailerGateway?.send(account.getEmail(), 'Welcome', '');
     return {
-      accountId: account.accountId,
+      accountId: account.getAccountId(),
     };
   }
 }

@@ -23,8 +23,8 @@ let getRide: GetRide;
 
 beforeEach(() => {
   connection = new PgPromiseAdapter();
-  // const accountDAO = new AccountDAODatabase();
-  const accountRepository = new AccountDAOMemory();
+  const accountRepository = new AccountRepositoryDatabase(connection);
+  // const accountRepository = new AccountDAOMemory();
   const rideRepository = new RideDAODatabase(connection);
   const mailerGateway = new MailerGatewayMemory();
   signup = new Signup(accountRepository, mailerGateway);
@@ -39,7 +39,7 @@ afterEach(async () => {
 });
 
 describe('request ride', () => {
-  it('should request ride', async () => {
+  it.only('should request ride', async () => {
     const inputSignup = {
       accountId: '',
       name: 'John Doe',

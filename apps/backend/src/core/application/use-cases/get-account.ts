@@ -10,7 +10,7 @@ export class GetAccount {
   async execute(id: string): Promise<Output> {
     const account = await this.getAccountData.getAccountById(id);
     return {
-      accountId: account.accountId,
+      accountId: account.getAccountId(),
       email: account.getEmail(),
       name: account.getName(),
       cpf: account.getCpf(),
