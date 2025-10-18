@@ -29,7 +29,7 @@ export default class RequestRide {
 
     await this.rideRepository.saveRide(ride);
     return {
-      rideId: ride.rideId,
+      rideId: ride.getRideId(),
     };
   }
 }

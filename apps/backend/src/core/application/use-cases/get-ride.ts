@@ -9,20 +9,20 @@ export default class GetRide {
 
   async execute(rideId: string): Promise<Output> {
     const ride = await this.rideDAO.getRideById(rideId);
-    const passengerAccount = await this.accountDAO.getAccountById(ride.passengerId);
+    const passengerAccount = await this.accountDAO.getAccountById(ride.getPassengerId());
     if (!passengerAccount) throw new Error('Passenger not found');
     return {
-      rideId: ride.rideId,
-      passengerId: ride.passengerId,
+      rideId: ride.getRideId(),
+      passengerId: ride.getPassengerId(),
       passengerName: passengerAccount.getName(),
-      driverId: ride.driverId,
+      driverId: ride.getDriverId(),
       from: {
-        latitude: ride.fromLat,
-        longitude: ride.fromLong,
+        latitude: ride.getFrom().getLatitude(),
+        longitude: ride.getFrom().getLongitude(),
       },
       to: {
-        latitude: ride.toLat,
-        longitude: ride.toLong,
+        latitude: ride.getTo().getLatitude(),
+        longitude: ride.getTo().getLongitude(),
       },
       fare: ride.fare,
       distance: ride.distance,
@@ -36,7 +36,7 @@ type Output = {
   rideId: string;
   passengerId: string;
   passengerName: string;
-  driverId: string | null;
+  driverId?: string;
   from: {
     latitude: number;
     longitude: number;

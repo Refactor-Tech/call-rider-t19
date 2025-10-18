@@ -39,7 +39,7 @@ afterEach(async () => {
 });
 
 describe('request ride', () => {
-  it.only('should request ride', async () => {
+  it('should request ride', async () => {
     const inputSignup = {
       accountId: '',
       name: 'John Doe',
@@ -62,7 +62,11 @@ describe('request ride', () => {
         longitude: -48.522234807851476,
       },
     };
-    const outputRequestRide = await requestRide.execute(inputRequestRide);
+    const outputRequestRide = await requestRide.execute({
+      passengerId: outputSignup.accountId,
+      from: inputRequestRide.from,
+      to: inputRequestRide.to,
+    });
     expect(outputRequestRide.rideId).toBeDefined();
     const outputGetRide = await getRide.execute(outputRequestRide.rideId);
     expect(outputGetRide.rideId).toBe(outputRequestRide.rideId);
