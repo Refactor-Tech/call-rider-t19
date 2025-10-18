@@ -1,6 +1,5 @@
-// @ts-nocheck
 import { describe, it, expect } from 'vitest';
-import { validateCpf } from '../../src/core/domain/validate-cpf';
+import CPF from '../../src/core/domain/value-objects/cpf';
 
 const validCPFs = [
   '123.456.789-09',
@@ -21,10 +20,10 @@ const invalidCPFs = [
 
 describe('validate-cpf', () => {
   it.each(validCPFs)('should validate a cpf %s', (cpf) => {
-    expect(validateCpf(cpf)).toBeTruthy();
+    expect(new CPF(cpf).getValue()).toBe(cpf);
   });
 
   it.each(invalidCPFs)('should invalidate a cpf %s', (cpf) => {
-    expect(validateCpf(cpf)).toBeFalsy();
+    expect(() => new CPF(cpf)).toThrowError('Invalid CPF');
   });
 });
