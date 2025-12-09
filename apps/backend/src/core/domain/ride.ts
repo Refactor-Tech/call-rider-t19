@@ -23,9 +23,7 @@ export default class Ride {
   ) {
     this.rideId = new UUID(rideId);
     this.passengerId = new UUID(passengerId);
-    if (driverId) {
-      this.driverId = new UUID(driverId);
-    }
+    if (driverId) this.driverId = new UUID(driverId);
     this.from = new Coordinates(fromLat, fromLong);
     this.to = new Coordinates(toLat, toLong);
   }
@@ -71,8 +69,10 @@ export default class Ride {
 
   getFrom() {
     return this.from;
+
   }
 
+  
   getTo() {
     return this.to;
   }
