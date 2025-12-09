@@ -1,10 +1,11 @@
 services:
   postgres:
+    container_name: call-rider-db
     image: postgres:14.3
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: app
+      POSTGRES_DB: call_rider
     ports:
       - "5432:5432"
     volumes:
