@@ -18,7 +18,7 @@ export default class Ride {
     toLong: number,
     readonly fare: number,
     readonly distance: number,
-    readonly status: string,
+    private status: string,
     readonly date: Date
   ) {
     this.rideId = new UUID(rideId);
@@ -55,6 +55,14 @@ export default class Ride {
     );
   }
 
+  acceptRide(driverId: string) {
+    this.driverId = new UUID(driverId);
+    if (this.status !== 'requested') {
+      throw new Error('Ride cannot be accepted');
+    }
+    this.status = 'accepted';
+  }
+
   getRideId() {
     return this.rideId.getValue();
   }
@@ -69,11 +77,13 @@ export default class Ride {
 
   getFrom() {
     return this.from;
-
   }
 
-  
   getTo() {
     return this.to;
+  }
+
+  getStatus() {
+    return this.status;
   }
 }

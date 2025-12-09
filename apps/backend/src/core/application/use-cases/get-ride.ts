@@ -26,7 +26,7 @@ export default class GetRide {
       },
       fare: ride.fare,
       distance: ride.distance,
-      status: ride.status,
+      status: ride.getStatus(),
       date: ride.date,
     };
   }

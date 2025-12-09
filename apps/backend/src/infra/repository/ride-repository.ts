@@ -3,8 +3,10 @@ import { DatabaseConnection } from '@/infra/database/database-connection';
 
 export interface RideRepository {
   saveRide(ride: Ride): Promise<void>;
+  updateRide(ride: Ride): Promise<void>;
   getRideById(rideId: string): Promise<Ride>;
   hasActiveRideByPassengerId(passengerId: string): Promise<boolean>;
+  hasActiveRideByDriverId(driverId: string): Promise<boolean>;
 }
 
 export class RideDAODatabase implements RideRepository {
@@ -39,6 +41,14 @@ export class RideDAODatabase implements RideRepository {
     return !!rideData;
   }
 
+  async hasActiveRideByDriverId(driverId: string): Promise<boolean> {
+    const [rideData] = await this.connection.query(
+      "select 1 from ccca.ride where driver_id = $1 and status not in ('completed', 'cancelled')",
+      [driverId]
+    );
+    return !!rideData;
+  }
+
   async saveRide(ride: Ride) {
     await this.connection.query(
       'insert into ccca.ride (ride_id, passenger_id, driver_id, from_lat, from_long, to_lat, to_long, fare, distance, status, date) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
@@ -52,9 +62,16 @@ export class RideDAODatabase implements RideRepository {
         ride.getTo().getLongitude(),
         ride.fare,
         ride.distance,
-        ride.status,
+        ride.getStatus(),
         ride.date,
       ]
+    );
+  }
+
+  async updateRide(ride: Ride) {
+    await this.connection.query(
+      'update ccca.ride set status = $1, driver_id = $2 where ride_id = $3',
+      [ride.getStatus(), ride.getDriverId(), ride.getRideId()]
     );
   }
 }
