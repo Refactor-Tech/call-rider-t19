@@ -1,6 +1,7 @@
 import { Position } from '@/core/domain/entity/position';
 import Coordinates from '@/core/domain/value-objects/coordinates';
 import UUID from '@/core/domain/value-objects/uuid';
+import { DistanceCalculator } from '../service/distance-calculator';
 
 export default class Ride {
   private rideId: UUID;
@@ -54,7 +55,8 @@ export default class Ride {
       fare,
       distance,
       status,
-      date
+      date,
+      []
     );
   }
 
@@ -81,7 +83,7 @@ export default class Ride {
     for (const [index, position] of this.positions.entries()) {
       const nextPosition = this.positions[index + 1];
       if (!nextPosition) break;
-      distance += this.calculateDistance(
+      distance += DistanceCalculator.calculate(
         position.getCoordinates(),
         nextPosition.getCoordinates()
       );
@@ -111,21 +113,5 @@ export default class Ride {
 
   getStatus() {
     return this.status;
-  }
-
-  calculateDistance(from: Coordinates, to: Coordinates) {
-    const earthRadiusKm = 6371;
-    const degreesToRadians = Math.PI / 180;
-    const deltaLat = (to.getLatitude() - from.getLatitude()) * degreesToRadians;
-    const deltaLon = (to.getLongitude() - from.getLongitude()) * degreesToRadians;
-    const a =
-      Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-      Math.cos(from.getLatitude() * degreesToRadians) *
-        Math.cos(to.getLatitude() * degreesToRadians) *
-        Math.sin(deltaLon / 2) *
-        Math.sin(deltaLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = earthRadiusKm * c;
-    return Math.round(distance);
   }
 }
