@@ -7,7 +7,7 @@ import {
 } from '@/infra/repository/account-repository';
 import { MailerGatewayMemory } from '@/infra/gateways/mailer-gateway';
 import sinon from 'sinon';
-import Account from '@/core/domain/account';
+import Account from '@/core/domain/entity/account';
 import {
   DatabaseConnection,
   PgPromiseAdapter,

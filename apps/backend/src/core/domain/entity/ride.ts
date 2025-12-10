@@ -1,6 +1,6 @@
-import { Position } from './position';
-import Coordinates from './value-objects/coordinates';
-import UUID from './value-objects/uuid';
+import { Position } from '@/core/domain/entity/position';
+import Coordinates from '@/core/domain/value-objects/coordinates';
+import UUID from '@/core/domain/value-objects/uuid';
 
 export default class Ride {
   private rideId: UUID;

@@ -1,9 +1,9 @@
-import CarPlate from './value-objects/car-plate';
-import CPF from './value-objects/cpf';
-import Email from './value-objects/email';
-import Name from './value-objects/name';
-import Password from './value-objects/password';
-import UUID from './value-objects/uuid';
+import CarPlate from '@/core/domain/value-objects/car-plate';
+import CPF from '@/core/domain/value-objects/cpf';
+import Email from '@/core/domain/value-objects/email';
+import Name from '@/core/domain/value-objects/name';
+import Password from '@/core/domain/value-objects/password';
+import UUID from '@/core/domain/value-objects/uuid';
 
 export default class Account {
   private accountId: UUID;

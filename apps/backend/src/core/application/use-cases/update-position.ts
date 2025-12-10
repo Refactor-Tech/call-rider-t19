@@ -1,4 +1,4 @@
-import { Position } from '@/core/domain/position';
+import { Position } from '@/core/domain/entity/position';
 import { RideRepository } from '@/infra/repository/ride-repository';
 
 export default class UpdatePosition {

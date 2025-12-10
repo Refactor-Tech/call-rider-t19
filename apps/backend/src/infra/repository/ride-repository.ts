@@ -1,5 +1,5 @@
-import { Position } from '@/core/domain/position';
-import Ride from '@/core/domain/ride';
+import { Position } from '@/core/domain/entity/position';
+import Ride from '@/core/domain/entity/ride';
 import { DatabaseConnection } from '@/infra/database/database-connection';
 
 export interface RideRepository {
