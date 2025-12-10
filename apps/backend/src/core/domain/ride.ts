@@ -55,12 +55,17 @@ export default class Ride {
     );
   }
 
-  acceptRide(driverId: string) {
+  accept(driverId: string) {
     this.driverId = new UUID(driverId);
     if (this.status !== 'requested') {
       throw new Error('Ride cannot be accepted');
     }
     this.status = 'accepted';
+  }
+
+  start() {
+    if (this.status !== 'accepted') throw new Error('Ride cannot be started');
+    this.status = 'in_progress';
   }
 
   getRideId() {

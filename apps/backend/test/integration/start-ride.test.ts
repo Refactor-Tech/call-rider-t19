@@ -15,6 +15,7 @@ import {
   PgPromiseAdapter,
 } from '@/infra/database/database-connection';
 import AcceptRide from '@/core/application/use-cases/accept-ride';
+import StartRide from '@/core/application/use-cases/start-ride';
 
 let connection: DatabaseConnection;
 let signup: Signup;
@@ -22,6 +23,7 @@ let getAccount: GetAccount;
 let requestRide: RequestRide;
 let getRide: GetRide;
 let acceptRide: AcceptRide;
+let startRide: StartRide;
 
 beforeEach(() => {
   connection = new PgPromiseAdapter();
@@ -34,6 +36,7 @@ beforeEach(() => {
   requestRide = new RequestRide(accountRepository, rideRepository);
   getRide = new GetRide(accountRepository, rideRepository);
   acceptRide = new AcceptRide(accountRepository, rideRepository);
+  startRide = new StartRide(rideRepository);
 });
 
 afterEach(async () => {
@@ -41,8 +44,8 @@ afterEach(async () => {
   await connection.close();
 });
 
-describe('accept ride', () => {
-  it('should accept ride', async () => {
+describe('start ride', () => {
+  it('should start ride', async () => {
     const inputSignupPassenger = {
       accountId: '',
       name: 'John Doe',
@@ -86,8 +89,11 @@ describe('accept ride', () => {
       driverId: outputSignupDriver.accountId,
     };
     await acceptRide.execute(inputAcceptRide);
+    const inputStartRide = {
+      rideId: outputRequestRide.rideId,
+    };
+    await startRide.execute(inputStartRide);
     const outputGetRide = await getRide.execute(outputRequestRide.rideId);
-    expect(outputGetRide.status).toBe('accepted');
-    expect(outputGetRide.driverId).toBe(outputSignupDriver.accountId);
+    expect(outputGetRide.status).toBe('in_progress');
   });
 });
