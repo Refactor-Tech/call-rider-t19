@@ -1,3 +1,4 @@
+import { Position } from './position';
 import Coordinates from './value-objects/coordinates';
 import UUID from './value-objects/uuid';
 
@@ -19,13 +20,15 @@ export default class Ride {
     readonly fare: number,
     readonly distance: number,
     private status: string,
-    readonly date: Date
+    readonly date: Date,
+    readonly positions: Position[]
   ) {
     this.rideId = new UUID(rideId);
     this.passengerId = new UUID(passengerId);
     if (driverId) this.driverId = new UUID(driverId);
     this.from = new Coordinates(fromLat, fromLong);
     this.to = new Coordinates(toLat, toLong);
+    this.positions = positions;
   }
 
   static create(
@@ -68,6 +71,24 @@ export default class Ride {
     this.status = 'in_progress';
   }
 
+  updatePosition(position: Position) {
+    if (this.status !== 'in_progress') throw new Error('Cannot update position');
+    this.positions.push(position);
+  }
+
+  getDistance() {
+    let distance = 0;
+    for (const [index, position] of this.positions.entries()) {
+      const nextPosition = this.positions[index + 1];
+      if (!nextPosition) break;
+      distance += this.calculateDistance(
+        position.getCoordinates(),
+        nextPosition.getCoordinates()
+      );
+    }
+    return distance;
+  }
+
   getRideId() {
     return this.rideId.getValue();
   }
@@ -90,5 +111,21 @@ export default class Ride {
 
   getStatus() {
     return this.status;
+  }
+
+  calculateDistance(from: Coordinates, to: Coordinates) {
+    const earthRadiusKm = 6371;
+    const degreesToRadians = Math.PI / 180;
+    const deltaLat = (to.getLatitude() - from.getLatitude()) * degreesToRadians;
+    const deltaLon = (to.getLongitude() - from.getLongitude()) * degreesToRadians;
+    const a =
+      Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+      Math.cos(from.getLatitude() * degreesToRadians) *
+        Math.cos(to.getLatitude() * degreesToRadians) *
+        Math.sin(deltaLon / 2) *
+        Math.sin(deltaLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = earthRadiusKm * c;
+    return Math.round(distance);
   }
 }

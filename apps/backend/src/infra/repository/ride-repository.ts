@@ -1,3 +1,4 @@
+import { Position } from '@/core/domain/position';
 import Ride from '@/core/domain/ride';
 import { DatabaseConnection } from '@/infra/database/database-connection';
 
@@ -18,6 +19,23 @@ export class RideDAODatabase implements RideRepository {
       [rideId]
     );
     if (!rideData) throw new Error('Ride not found');
+    const positions = [];
+    const positionsData = await this.connection.query(
+      'select * from ccca.position where ride_id = $1',
+      [rideId]
+    );
+    for (const positionData of positionsData) {
+      positions.push(
+        new Position(
+          positionData.position_id,
+          positionData.ride_id,
+          parseFloat(positionData.latitude),
+          parseFloat(positionData.longitude),
+          positionData.date
+        )
+      );
+    }
+
     return new Ride(
       rideData.ride_id,
       rideData.passenger_id,
@@ -29,7 +47,8 @@ export class RideDAODatabase implements RideRepository {
       parseFloat(rideData.fare),
       parseFloat(rideData.distance),
       rideData.status,
-      rideData.date
+      rideData.date,
+      positions
     );
   }
 
@@ -73,5 +92,17 @@ export class RideDAODatabase implements RideRepository {
       'update ccca.ride set status = $1, driver_id = $2 where ride_id = $3',
       [ride.getStatus(), ride.getDriverId(), ride.getRideId()]
     );
+    for (const position of ride.positions) {
+      await this.connection.query(
+        'insert into ccca.position (position_id, ride_id, latitude, longitude, date) values ($1, $2, $3, $4, $5) on conflict (position_id) do nothing',
+        [
+          position.getPositionId(),
+          position.getRideId(),
+          position.getCoordinates().getLatitude(),
+          position.getCoordinates().getLongitude(),
+          position.date,
+        ]
+      );
+    }
   }
 }

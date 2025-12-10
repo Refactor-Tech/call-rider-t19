@@ -25,7 +25,7 @@ export default class GetRide {
         longitude: ride.getTo().getLongitude(),
       },
       fare: ride.fare,
-      distance: ride.distance,
+      distance: ride.getDistance(),
       status: ride.getStatus(),
       date: ride.date,
     };
