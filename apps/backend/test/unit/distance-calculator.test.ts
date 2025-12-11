@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { DistanceCalculator } from '../../src/core/domain/service/distance-calculator';
+import { DistanceCalculator } from '@/core/domain/service/distance-calculator';
 import Coordinates from '@/core/domain/value-objects/coordinates';
 
 describe('Distance Calculator', () => {

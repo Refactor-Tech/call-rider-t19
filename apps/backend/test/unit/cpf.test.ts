@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import CPF from '../../src/core/domain/value-objects/cpf';
+import CPF from '@/core/domain/value-objects/cpf';
 
 const validCPFs = [
   '123.456.789-09',
